@@ -1,0 +1,53 @@
+This code is written in JavaScript and involves asynchronous operations, making use of the event loop in a Node.js environment. Let's break down the code and explain it in terms of the event loop:
+
+Module Imports:
+
+
+const fs = require('fs');
+const crypto = require('crypto');
+Here, the fs module is imported for file system operations, and the crypto module is imported for cryptographic functionality.
+
+Logging Start Time:
+
+
+const start = Date.now()
+console.log('Hello from Top Level - Start', start - Date.now());
+This logs a message indicating the start of the script execution along with the time elapsed since the start.
+
+setTimeout:
+
+
+setTimeout(() => console.log('Hello from Timer 1', start - Date.now()), 0);
+This sets a timer to execute the callback function after 0 milliseconds. Despite the timeout being 0, it will not execute immediately due to the asynchronous nature of timers. The timer callback is added to the event queue and will be executed in a later iteration of the event loop.
+
+setImmediate:
+
+
+setImmediate(() => console.log('Hello from Immediate 1', start - Date.now()));
+setImmediate is used to execute the callback in the next iteration of the event loop. It is generally processed after I/O events but before setTimeout callbacks.
+
+Read File Asynchronously:
+
+
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  // Callback function
+  if (err) {
+    console.error('Error reading file:', err);
+    return;
+  }
+  console.log('File Content:', data, start - Date.now());
+});
+This reads the content of the 'example.txt' file asynchronously. The callback function is triggered when the file reading operation is complete. The callback is placed in the event queue to be processed once the I/O operation is finished.
+
+Logging End Time:
+
+
+console.log('Hello from Top Level - End', start - Date.now());
+Logs a message indicating the end of the script execution along with the time elapsed since the start.
+
+During the event loop, the script goes through various phases. Asynchronous operations like file reading, timers, and immediate callbacks are offloaded to the event queue and processed in subsequent iterations of the event loop, allowing non-blocking execution of code. The order of execution might differ due to the asynchronous nature of these operations.
+
+
+
+
+
